@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Magazines</title>
+</head>
+<body>
+<h1>Magazines</h1>
+
+<nav>
+    <a th:href="@{/}">Home</a> |
+    <a th:href="@{/books}">Books</a> |
+    <a th:href="@{/magazines}">Magazines</a> |
+    <a th:href="@{/discmags}">DiscMags</a> |
+    <a th:href="@{/tickets}">Tickets</a>
+</nav>
+
+<hr/>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Order Qty</th>
+        <th>Current Issue</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="mag : ${magazines}">
+        <td th:text="${mag.id}">1</td>
+        <td th:text="${mag.title}">Title</td>
+        <td th:text="${mag.price}">0.0</td>
+        <td th:text="${mag.orderQty}">0</td>
+        <td th:text="${mag.currentIssue}">2025-01-01</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
