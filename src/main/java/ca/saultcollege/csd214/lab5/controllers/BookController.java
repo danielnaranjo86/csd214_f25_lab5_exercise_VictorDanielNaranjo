@@ -55,12 +55,6 @@ public class BookController {
     // CREATE + UPDATE (save)
     @PostMapping("/save")
     public String saveBook(@ModelAttribute("book") BookEntity book) {
-
-        // sync parent name/title if needed
-        if (book.getName() == null || book.getName().isBlank()) {
-            book.setName(book.getTitle());
-        }
-
         bookRepository.save(book);
         return "redirect:/books";
     }

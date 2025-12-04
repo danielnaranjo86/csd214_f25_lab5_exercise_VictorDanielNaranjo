@@ -41,145 +41,94 @@ public class Lab5Application implements CommandLineRunner {
     public void run(String... args) {
         Faker faker = new Faker();
 
-        System.out.println("===== BOOK CRUD =====");
-        demoBookCrud(faker);
+        // Optional: avoid double seeding if ddl-auto is not "create"
+        if (bookRepo.count() == 0) {
+            seedBooks(faker);
+        }
+        if (magRepo.count() == 0) {
+            seedMagazines(faker);
+        }
+        if (discMagRepo.count() == 0) {
+            seedDiscMags(faker);
+        }
+        if (ticketRepo.count() == 0) {
+            seedTickets(faker);
+        }
 
-        System.out.println("\n===== MAGAZINE CRUD =====");
-        demoMagazineCrud(faker);
-
-        System.out.println("\n===== DISCMAG CRUD =====");
-        demoDiscMagCrud(faker);
-
-        System.out.println("\n===== TICKET CRUD =====");
-        demoTicketCrud(faker);
+        System.out.println("Database seeded for Lab 5.");
     }
 
-    private void demoBookCrud(Faker faker) {
-        String title = faker.book().title();
-        String author = faker.book().author();
-        String isbn10 = faker.code().isbn10();
-        String description = faker.lorem().sentence(10);
-        double price = faker.number().randomDouble(2, 10, 50);
-        int copies = faker.number().numberBetween(1, 20);
+    private void seedBooks(Faker faker) {
+        // some random books
+        for (int i = 0; i < 10; i++) {
+            String title = faker.book().title();
+            String author = faker.book().author();
+            String isbn10 = faker.code().isbn10();
+            String description = faker.lorem().sentence(10);
+            double price = faker.number().randomDouble(2, 10, 50);
+            int copies = faker.number().numberBetween(1, 20);
 
-        // CREATE
-        BookEntity book = new BookEntity(title, price, copies, isbn10, description, author);
-        book = bookRepo.save(book);
-        System.out.println("Created: " + book);
+            BookEntity book = new BookEntity(title, price, copies, isbn10, description, author);
+            bookRepo.save(book);
+        }
 
-        // READ BY ID
-        var found = bookRepo.findById(book.getId()).orElseThrow();
-        System.out.println("Read by id: " + found);
-
-        // CUSTOM QUERY: findByAuthor
-        System.out.println("Books by " + author + ": " + bookRepo.findByAuthor(author));
-
-        // READ ALL
-        System.out.println("All books: " + bookRepo.findAll());
-
-        // UPDATE (change copies)
-        found.setCopies(found.getCopies() + 5);
-        found = bookRepo.save(found);
-        System.out.println("Updated: " + found);
-
-        // DELETE
-        bookRepo.deleteById(found.getId());
-        System.out.println("After delete, findAll: " + bookRepo.findAll());
-    }
-
-    private void demoMagazineCrud(Faker faker) {
-        String title = "Magazine " + faker.book().title();
-        String isbn10 = faker.code().isbn10();
-        String description = faker.lorem().sentence(8);
-        double price = faker.number().randomDouble(2, 5, 20);
-        int copies = faker.number().numberBetween(5, 50);
-        int orderQty = faker.number().numberBetween(10, 100);
-        LocalDate issue = LocalDate.now();
-
-        // CREATE
-        MagazineEntity mag = new MagazineEntity(
-                title, price, copies, isbn10, description, orderQty, issue
+        // example hard-coded book like in lecture
+        BookEntity caesar = new BookEntity(
+                "Julius Caesar",
+                19.99,
+                5,
+                "1234567890",
+                "Shakespeare classic.",
+                "William Shakespeare"
         );
-        mag = magRepo.save(mag);
-        System.out.println("Created: " + mag);
-
-        // READ
-        var found = magRepo.findById(mag.getId()).orElseThrow();
-        System.out.println("Read: " + found);
-
-        // READ ALL
-        System.out.println("All magazines: " + magRepo.findAll());
-
-        // UPDATE (change orderQty)
-        found.setOrderQty(found.getOrderQty() + 20);
-        found = magRepo.save(found);
-        System.out.println("Updated: " + found);
-
-        // DELETE
-        magRepo.deleteById(found.getId());
-        System.out.println("After delete, findAll: " + magRepo.findAll());
+        bookRepo.save(caesar);
     }
 
-    private void demoDiscMagCrud(Faker faker) {
-        String title = "DiscMag " + faker.book().title();
-        String isbn10 = faker.code().isbn10();
-        String description = faker.lorem().sentence(8);
-        double price = faker.number().randomDouble(2, 7, 25);
-        int copies = faker.number().numberBetween(5, 50);
-        int orderQty = faker.number().numberBetween(10, 100);
-        LocalDate issue = LocalDate.now().minusDays(7);
+    private void seedMagazines(Faker faker) {
+        for (int i = 0; i < 5; i++) {
+            String title = "Magazine " + faker.book().title();
+            String isbn10 = faker.code().isbn10();
+            String description = faker.lorem().sentence(8);
+            double price = faker.number().randomDouble(2, 5, 20);
+            int copies = faker.number().numberBetween(5, 50);
+            int orderQty = faker.number().numberBetween(10, 100);
+            LocalDate issue = LocalDate.now().minusMonths(i);
 
-        String mediaFormat = faker.options().option("DVD", "Blu-ray", "USB", "Download");
-        String topic = faker.book().genre();
-
-        // CREATE
-        DiscMagEntity discMag = new DiscMagEntity(
-                title, price, copies, isbn10, description,
-                orderQty, issue, mediaFormat, topic
-        );
-        discMag = discMagRepo.save(discMag);
-        System.out.println("Created: " + discMag);
-
-        // READ
-        var found = discMagRepo.findById(discMag.getId()).orElseThrow();
-        System.out.println("Read: " + found);
-
-        // READ ALL
-        System.out.println("All disc mags: " + discMagRepo.findAll());
-
-        // UPDATE (toggle mediaFormat for fun)
-        found.setMediaFormat("Streaming");
-        found = discMagRepo.save(found);
-        System.out.println("Updated: " + found);
-
-        // DELETE
-        discMagRepo.deleteById(found.getId());
-        System.out.println("After delete, findAll: " + discMagRepo.findAll());
+            MagazineEntity mag = new MagazineEntity(
+                    title, price, copies, isbn10, description, orderQty, issue
+            );
+            magRepo.save(mag);
+        }
     }
 
-    private void demoTicketCrud(Faker faker) {
-        String description = "Admission: " + faker.commerce().productName();
-        double price = faker.number().randomDouble(2, 1, 15);
+    private void seedDiscMags(Faker faker) {
+        for (int i = 0; i < 5; i++) {
+            String title = "DiscMag " + faker.book().title();
+            String isbn10 = faker.code().isbn10();
+            String description = faker.lorem().sentence(8);
+            double price = faker.number().randomDouble(2, 7, 25);
+            int copies = faker.number().numberBetween(5, 50);
+            int orderQty = faker.number().numberBetween(10, 100);
+            LocalDate issue = LocalDate.now().minusWeeks(i);
 
-        // CREATE
-        TicketEntity ticket = new TicketEntity(description, price);
-        ticket = ticketRepo.save(ticket);
-        System.out.println("Created: " + ticket);
+            String mediaFormat = faker.options().option("DVD", "Blu-ray", "USB", "Download");
+            String topic = faker.book().genre();
 
-        // READ
-        var found = ticketRepo.findById(ticket.getId()).orElseThrow();
-        System.out.println("Read: " + found);
+            DiscMagEntity discMag = new DiscMagEntity(
+                    title, price, copies, isbn10, description,
+                    orderQty, issue, mediaFormat, topic
+            );
+            discMagRepo.save(discMag);
+        }
+    }
 
-        // READ ALL
-        System.out.println("All tickets: " + ticketRepo.findAll());
+    private void seedTickets(Faker faker) {
+        for (int i = 0; i < 10; i++) {
+            String description = "Admission: " + faker.commerce().productName();
+            double price = faker.number().randomDouble(2, 1, 15);
 
-        // UPDATE (increase price)
-        found.setPrice(found.getPrice() + 1.0);
-        found = ticketRepo.save(found);
-        System.out.println("Updated: " + found);
-
-        // DELETE
-        ticketRepo.deleteById(found.getId());
-        System.out.println("After delete, findAll: " + ticketRepo.findAll());
+            TicketEntity ticket = new TicketEntity(description, price);
+            ticketRepo.save(ticket);
+        }
     }
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>DiscMags</title>
+</head>
+<body>
+<h1>DiscMags</h1>
+
+<nav>
+    <a th:href="@{/}">Home</a> |
+    <a th:href="@{/books}">Books</a> |
+    <a th:href="@{/magazines}">Magazines</a> |
+    <a th:href="@{/discmags}">DiscMags</a> |
+    <a th:href="@{/tickets}">Tickets</a>
+</nav>
+
+<hr/>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Copies</th>
+        <th>ISBN-10</th>
+        <th>Description</th>
+        <th>Order Qty</th>
+        <th>Issue Date</th>
+        <th>Media Format</th>
+        <th>Topic</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 'discMags' must match model.addAttribute("discMags", ...) -->
+    <tr th:each="disc : ${discMags}">
+        <td th:text="${disc.id}">1</td>
+        <td th:text="${disc.title}">Title</td>
+        <td th:text="${disc.price}">0.0</td>
+        <td th:text="${disc.copies}">0</td>
+        <td th:text="${disc.isbn10}">1234567890</td>
+        <td th:text="${disc.description}">Description</td>
+        <td th:text="${disc.orderQty}">0</td>
+        <td th:text="${disc.issue}">2025-01-01</td>
+        <td th:text="${disc.mediaFormat}">DVD</td>
+        <td th:text="${disc.topic}">Topic</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

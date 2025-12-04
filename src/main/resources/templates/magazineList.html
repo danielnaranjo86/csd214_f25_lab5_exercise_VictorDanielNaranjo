@@ -22,8 +22,11 @@
         <th>Id</th>
         <th>Title</th>
         <th>Price</th>
+        <th>Copies</th>
+        <th>ISBN-10</th>
+        <th>Description</th>
         <th>Order Qty</th>
-        <th>Current Issue</th>
+        <th>Issue Date</th>
     </tr>
     </thead>
     <tbody>
@@ -31,8 +34,11 @@
         <td th:text="${mag.id}">1</td>
         <td th:text="${mag.title}">Title</td>
         <td th:text="${mag.price}">0.0</td>
+        <td th:text="${mag.copies}">0</td>
+        <td th:text="${mag.isbn10}">1234567890</td>
+        <td th:text="${mag.description}">Description</td>
         <td th:text="${mag.orderQty}">0</td>
-        <td th:text="${mag.currentIssue}">2025-01-01</td>
+        <td th:text="${mag.issue}">2025-01-01</td>
     </tr>
     </tbody>
 </table>

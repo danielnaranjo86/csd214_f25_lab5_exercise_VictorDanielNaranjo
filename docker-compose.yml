@@ -3,7 +3,7 @@ services:
     image: 'mysql:latest'
     container_name: 'lab5'
     environment:
-      MYSQL_DATABASE: lab4
+      MYSQL_DATABASE: lab5
       MYSQL_USER: fcarella
       MYSQL_PASSWORD: itstudies12345
       MYSQL_ROOT_PASSWORD: itstudies12345
